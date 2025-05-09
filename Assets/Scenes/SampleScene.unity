@@ -318,7 +318,10 @@ MonoBehaviour:
   treePrefab: {fileID: 3856323372907150770, guid: c3b6bef4553cbd844b43f72c9b695a9e, type: 3}
   rockPrefab: {fileID: 7339950061872183802, guid: f95019226e7bbad4184a1e4baed7cd0a, type: 3}
   sandPrefab: {fileID: 5127217704946897265, guid: d49d55c1483879d41b9265c3b7c0143e, type: 3}
-  numberOfSpawns: 100
+  GeneralObject: 100
+  forestRadius: 100
+  forestObject: 100
+  forestPoz: {x: 0.7, y: 0.3}
 --- !u!4 &808046662
 Transform:
   m_ObjectHideFlags: 0
@@ -368,12 +371,14 @@ MonoBehaviour:
   scale: 10
   persistence: 0.5
   lacunarity: 2
-  Multi_Height: 1
+  Multi_Height: 0.8
   offset: {x: 0, y: 0}
+  riverShift: 50
+  riverRadians: 90
   riverWidth: 20
-  riverDepth: 0.06
-  riveramplitude: 50
-  riverfrequency: 0.03
+  riverDepth: 0.1
+  riverAmplitude: 50
+  riverFrequency: 0.03
 --- !u!4 &827151713
 Transform:
   m_ObjectHideFlags: 0

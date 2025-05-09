@@ -3,20 +3,21 @@ using UnityEngine;
 public class TerrainGenerator : MonoBehaviour
 {
     public Terrain terrain;
-    public int octaves = 4;
+    public int octaves = 2;
     public float scale = 10f;
     public float persistence = 0.5f;
     public float lacunarity = 2f;
-    public float Multi_Height = 9f;
+    public float Multi_Height = 0.8f;
     public Vector2 offset;
 
     [Header("Rzeka")]
+    public float riverShift = 0f;
+    public float riverRadians = 0f;
     public int riverWidth = 3;
     public float riverDepth = 0.05f;
-    public float riveramplitude = 50f;
-    public float riverfrequency = 0.03f;
+    public float riverAmplitude = 50f;
+    public float riverFrequency = 0.03f;
     private float[,] heights;
-    private float[,,] splatmap;
     void Start()
     {
         TerrainData terrain_data = terrain.terrainData;
@@ -68,20 +69,27 @@ public class TerrainGenerator : MonoBehaviour
         int heightRes = heights.GetLength(0);
         int widthRes = heights.GetLength(1);
 
-        for (int x = 0; x < widthRes; x++)
-        {
-            float centerY = heightRes / 2 + Mathf.Sin(x * riverfrequency) * riveramplitude;
-            int y = Mathf.RoundToInt(centerY);
+        Vector2 Mapcenter = new Vector2(widthRes / 2f, heightRes / 2f) + 
+                            new Vector2(-Mathf.Sin(riverRadians), Mathf.Cos(riverRadians)) *
+                            riverShift;
+        Vector2 dir = new Vector2(Mathf.Cos(riverRadians), Mathf.Sin(riverRadians)).normalized;
 
-            int width = heights.GetLength(0);
-            int height = heights.GetLength(1);
+        int maxLength = Mathf.CeilToInt(Mathf.Sqrt(widthRes * widthRes + heightRes * heightRes));
+
+        for (int i = -maxLength; i <= maxLength; i++)
+        {
+            float offset = Mathf.Sin(i * riverFrequency) * riverAmplitude;
+            Vector2 pos = Mapcenter + dir * i + new Vector2(-dir.y, dir.x) * offset;
+
+            int x = Mathf.RoundToInt(pos.x);
+            int y = Mathf.RoundToInt(pos.y);
 
             for (int dx = -riverWidth; dx <= riverWidth; dx++)
             {
                 for (int dy = -riverWidth; dy <= riverWidth; dy++)
                 {
-                    int nx = Mathf.Clamp(x + dx, 0, width - 1);
-                    int ny = Mathf.Clamp(y + dy, 0, height - 1);
+                    int nx = Mathf.Clamp(x + dx, 0, widthRes - 1);
+                    int ny = Mathf.Clamp(y + dy, 0, heightRes - 1);
 
                     float dist = Mathf.Sqrt(dx * dx + dy * dy);
                     if (dist <= riverWidth)
